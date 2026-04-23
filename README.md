@@ -168,15 +168,4 @@ npm start
 * Feature-based development
 * Clean commit messages
 
----
 
-## 👥 Team
-
-* Backend & Security: *Your Name*
-* Frontend & Integration: *Teammate Name*
-
----
-
-## 📜 License
-
-This project is for educational purposes.
