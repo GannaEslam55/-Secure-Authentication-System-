@@ -2,11 +2,22 @@
 <html>
 <head>
     <title>Dashboard</title>
+<<<<<<< HEAD
+=======
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        button { padding: 10px 20px; margin: 6px; cursor: pointer; }
+        #tokenBox { background: #f0f0f0; padding: 10px; word-break: break-all; font-size: 12px; margin: 14px 0; border-radius: 4px; }
+        #result { background: #e8f5e9; padding: 12px; border-radius: 4px; margin-top: 14px; }
+        .danger { color: red; }
+    </style>
+>>>>>>> b059437 (gui + editing some problems)
 </head>
 <body>
 
 <h2>Dashboard</h2>
 
+<<<<<<< HEAD
 <h3 id="userInfo"></h3>
 
 <hr>
@@ -117,3 +128,53 @@ function logout() {
 
 </body>
 </html>
+=======
+<p><strong>Your JWT Token:</strong></p>
+<div id="tokenBox">Loading...</div>
+
+<h3>Access Protected Routes:</h3>
+<button onclick="access('/admin')">Admin Page</button>
+<button onclick="access('/manager')">Manager Page</button>
+<button onclick="access('/user')">User Page</button>
+<button onclick="access('/user/profile')">My Profile</button>
+
+<div id="result"></div>
+
+<br>
+<button onclick="logout()" style="background:#f44336;color:white;">Logout</button>
+
+<script>
+const token = localStorage.getItem("token");
+
+if (!token) {
+    window.location.href = "login.html";
+}
+
+document.getElementById("tokenBox").innerText = token || "No token found";
+
+async function access(route) {
+    const res = await fetch(route, {
+        headers: { "Authorization": token }
+    });
+
+    const data = await res.json();
+    const box  = document.getElementById("result");
+
+    if (res.ok) {
+        box.style.background = "#e8f5e9";
+        box.innerHTML = "✅ " + JSON.stringify(data);
+    } else {
+        box.style.background = "#ffebee";
+        box.innerHTML = "❌ " + res.status + " — " + JSON.stringify(data);
+    }
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
+>>>>>>> b059437 (gui + editing some problems)
