@@ -36,7 +36,14 @@ async function register() {
     });
 
     const data = await res.json();
+
     document.getElementById("qr").src = data.qrCode;
+
+    alert("Scan QR then login");
+
+    setTimeout(() => {
+        window.location.href = "login.html"; // 👈 مهم
+    }, 100000);
 }
 </script>
 

@@ -7,38 +7,112 @@
 
 <h2>Dashboard</h2>
 
+<h3 id="userInfo"></h3>
+
+<hr>
+
 <button onclick="getAdmin()">Admin Page</button>
 <button onclick="getManager()">Manager Page</button>
 <button onclick="getUser()">User Page</button>
 
+<br><br>
+
+<button onclick="logout()">Logout</button>
+
 <h3 id="result"></h3>
 
 <script>
+
+// ===== check token =====
 const token = localStorage.getItem("token");
 
+if (!token) {
+    alert("You must login first!");
+    window.location.href = "login.html";
+}
+
+// ===== decode JWT =====
+const payload = JSON.parse(atob(token.split('.')[1]));
+
+document.getElementById("userInfo").innerText =
+    "Logged in as: " + payload.role;
+
+// ===== functions =====
+
 async function getAdmin() {
-    const res = await fetch("/admin", {
-        headers: { "Authorization": token }
-    });
-    const data = await res.text();
-    document.getElementById("result").innerText = data;
+    try {
+        const res = await fetch("/admin", {
+            headers: { "Authorization": token }
+        });
+
+        const data = await res.text();
+
+        if (!res.ok) {
+            document.getElementById("result").innerText =
+                "❌ " + data;
+        } else {
+            document.getElementById("result").innerText =
+                "✅ " + data;
+        }
+
+    } catch (err) {
+        document.getElementById("result").innerText =
+            "Error: " + err.message;
+    }
 }
 
 async function getManager() {
-    const res = await fetch("/manager", {
-        headers: { "Authorization": token }
-    });
-    const data = await res.text();
-    document.getElementById("result").innerText = data;
+    try {
+        const res = await fetch("/manager", {
+            headers: { "Authorization": token }
+        });
+
+        const data = await res.text();
+
+        if (!res.ok) {
+            document.getElementById("result").innerText =
+                "❌ " + data;
+        } else {
+            document.getElementById("result").innerText =
+                "✅ " + data;
+        }
+
+    } catch (err) {
+        document.getElementById("result").innerText =
+            "Error: " + err.message;
+    }
 }
 
 async function getUser() {
-    const res = await fetch("/user", {
-        headers: { "Authorization": token }
-    });
-    const data = await res.text();
-    document.getElementById("result").innerText = data;
+    try {
+        const res = await fetch("/user", {
+            headers: { "Authorization": token }
+        });
+
+        const data = await res.text();
+
+        if (!res.ok) {
+            document.getElementById("result").innerText =
+                "❌ " + data;
+        } else {
+            document.getElementById("result").innerText =
+                "✅ " + data;
+        }
+
+    } catch (err) {
+        document.getElementById("result").innerText =
+            "Error: " + err.message;
+    }
 }
+
+// ===== logout =====
+function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+
+    window.location.href = "login.html";
+}
+
 </script>
 
 </body>
