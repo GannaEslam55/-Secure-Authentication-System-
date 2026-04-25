@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+
+<h2>Dashboard</h2>
+
+<button onclick="getAdmin()">Admin Page</button>
+<button onclick="getManager()">Manager Page</button>
+<button onclick="getUser()">User Page</button>
+
+<h3 id="result"></h3>
+
+<script>
+const token = localStorage.getItem("token");
+
+async function getAdmin() {
+    const res = await fetch("/admin", {
+        headers: { "Authorization": token }
+    });
+    const data = await res.text();
+    document.getElementById("result").innerText = data;
+}
+
+async function getManager() {
+    const res = await fetch("/manager", {
+        headers: { "Authorization": token }
+    });
+    const data = await res.text();
+    document.getElementById("result").innerText = data;
+}
+
+async function getUser() {
+    const res = await fetch("/user", {
+        headers: { "Authorization": token }
+    });
+    const data = await res.text();
+    document.getElementById("result").innerText = data;
+}
+</script>
+
+</body>
+</html>
