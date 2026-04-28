@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+<<<<<<< HEAD
+=======
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 40px auto; padding: 20px; }
+        input { width: 100%; padding: 8px; margin: 6px 0 14px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #2196F3; color: white; border: none; cursor: pointer; margin-bottom: 10px; }
+        #step2 { display: none; }
+        #message { color: red; }
+    </style>
+>>>>>>> b059437 (gui + editing some problems)
+</head>
+<body>
+
+<h2>Login</h2>
+
+<<<<<<< HEAD
+<input type="email" id="email" placeholder="Email"><br><br>
+<input type="password" id="password" placeholder="Password"><br><br>
+
+<button onclick="login()">Login</button>
+
+<script>
+=======
+<div id="step1">
+    <input type="email"    id="email"    placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+</div>
+
+<div id="step2">
+    <h3>2FA Verification</h3>
+    <p>Enter the 6-digit code from your Authenticator app:</p>
+    <input type="text" id="code" placeholder="6-digit code" maxlength="6" />
+    <button onclick="verify()">Verify</button>
+</div>
+
+<p id="message"></p>
+
+<script>
+let userId = "";
+
+>>>>>>> b059437 (gui + editing some problems)
+async function login() {
+    const res = await fetch("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+<<<<<<< HEAD
+            email: document.getElementById("email").value,
+=======
+            email:    document.getElementById("email").value,
+>>>>>>> b059437 (gui + editing some problems)
+            password: document.getElementById("password").value
+        })
+    });
+
+    const data = await res.json();
+
+<<<<<<< HEAD
+    if (data.userId) {
+        localStorage.setItem("userId", data.userId);
+        window.location.href = "verify.html"; // 👈 يروح 2FA
+    } else {
+        alert(data);
+=======
+    if (res.ok) {
+        userId = data.userId;
+        document.getElementById("step1").style.display = "none";
+        document.getElementById("step2").style.display = "block";
+        document.getElementById("message").innerText = "";
+    } else {
+        document.getElementById("message").innerText = data.message;
+    }
+}
+
+async function verify() {
+    const res = await fetch("/auth/verify-2fa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: userId,
+            token:  document.getElementById("code").value
+        })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+        localStorage.setItem("token", data.token);
+        window.location.href = "dashboard.html";
+    } else {
+        document.getElementById("message").innerText = data.message;
+>>>>>>> b059437 (gui + editing some problems)
+    }
+}
+</script>
+
+</body>
+<<<<<<< HEAD
+</html>
+=======
+</html>
+>>>>>>> b059437 (gui + editing some problems)
