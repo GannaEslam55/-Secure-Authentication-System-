@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const connectDB = require("./config/db");
 
@@ -12,6 +13,7 @@ console.log("userRoutes:", typeof userRoutes);
 console.log("adminRoutes:", typeof adminRoutes);
 console.log("managerRoutes:", typeof managerRoutes);
 app.use(express.json());
+app.use(cors());
 
 // DB
 connectDB();

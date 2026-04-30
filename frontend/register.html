@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — SecureAuth</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <div class="orb-bottom"></div>
+
+  <div class="card">
+    <div class="brand">
+      <div class="brand-icon">🔐</div>
+      <span class="brand-name">SecureAuth</span>
+    </div>
+
+    <div class="steps">
+      <div class="step active">
+        <div class="step-dot">1</div>
+        <div class="step-label">Register</div>
+      </div>
+      <div class="step">
+        <div class="step-dot">2</div>
+        <div class="step-label">Scan QR</div>
+      </div>
+      <div class="step">
+        <div class="step-dot">3</div>
+        <div class="step-label">Login</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: Register Form -->
+    <div id="step-register">
+      <h1>Create account</h1>
+      <p class="subtitle">Fill in your details to get started</p>
+
+      <div id="alert-register" class="alert"></div>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="Ganna Eslam" autocomplete="off"/>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="off"/>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Min. 8 characters"/>
+      </div>
+
+      <div class="form-group">
+        <label>Role</label>
+        <select id="role">
+          <option value="user">👤 User</option>
+          <option value="manager">👔 Manager</option>
+          <option value="admin">👑 Admin</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" id="btn-register" onclick="doRegister()">
+        Create Account →
+      </button>
+
+      <div class="link-row">Already have an account? <a href="login.html">Sign in</a></div>
+    </div>
+
+    <!-- STEP 2: QR Code -->
+    <div id="step-qr" style="display:none; text-align:center;">
+      <h1>Scan QR Code</h1>
+      <p class="subtitle">Open Google Authenticator, Microsoft Authenticator, or Authy and scan this code</p>
+
+      <div id="alert-qr" class="alert"></div>
+
+      <div style="display:flex; justify-content:center; margin: 24px 0;">
+        <div class="qr-container">
+          <img id="qr-img" src="" alt="QR Code"/>
+        </div>
+      </div>
+
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:24px;">
+        After scanning, you'll get a 6-digit code that refreshes every 30 seconds.
+      </p>
+
+      <button class="btn btn-primary" onclick="goToLogin()">
+        Continue to Login →
+      </button>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    async function doRegister() {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
+
+      hideAlert("alert-register");
+
+      if (!name || !email || !password) {
+        return showAlert("alert-register", "Please fill in all fields.");
+      }
+      if (password.length < 6) {
+        return showAlert("alert-register", "Password must be at least 6 characters.");
+      }
+
+      setLoading("btn-register", true);
+
+      try {
+        const res = await fetch("http://localhost:3000/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password, role })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          showAlert("alert-register", data.message || "Registration failed.");
+        } else {
+          // Show QR code step
+          document.getElementById("step-register").style.display = "none";
+          document.getElementById("step-qr").style.display = "block";
+          document.getElementById("qr-img").src = data.qrCode;
+          // Save userId for later
+          localStorage.setItem("userId", data.userId);
+        }
+      } catch (e) {
+        showAlert("alert-register", "Cannot connect to server. Make sure it's running.");
+      }
+
+      setLoading("btn-register", false);
+    }
+
+    function goToLogin() {
+      window.location.href = "login.html";
+    }
+
+    // If already logged in
+    if (getToken()) window.location.href = "dashboard.html";
+  </script>
+</body>
+</html>

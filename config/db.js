@@ -2,10 +2,13 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb+srv://farahnegm90_db_user:PqKSFgGJgxkXzSSU@cluster0.omn7g5s.mongodb.net/auth_system?retryWrites=true&w=majority");
-    console.log("MongoDB Atlas connected");
+    console.log("⏳ Connecting to MongoDB...");
+
+    await mongoose.connect("mongodb://127.0.0.1:27017/auth_system");
+
+    console.log("✅ MongoDB Connected Successfully");
   } catch (err) {
-    console.log("DB error:", err);
+    console.log("❌ DB error:", err.message);
   }
 };
 
