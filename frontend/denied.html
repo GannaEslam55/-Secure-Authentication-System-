@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Access Denied — SecureAuth</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <div class="orb-bottom"></div>
+  <div class="card" style="text-align:center; max-width:420px;">
+    <div class="denied-icon" style="font-size:72px; margin-bottom:16px; animation: bounce 1s ease infinite;">🚫</div>
+    <h1 style="color:var(--error); font-size:32px; margin-bottom:8px;">Access Denied</h1>
+    <p style="color:var(--text-muted); margin-bottom:28px; line-height:1.6;">
+      You don't have the required permissions to view this page.
+      Your request was blocked by the role-based access control system.
+    </p>
+    <div class="info-card" style="text-align:left; margin-bottom:24px;">
+      <div class="info-row">
+        <span class="key">Status</span>
+        <span class="val" style="color:var(--error);">403 Forbidden</span>
+      </div>
+      <div class="info-row">
+        <span class="key">Your Role</span>
+        <span class="val" id="your-role">—</span>
+      </div>
+    </div>
+    <a href="dashboard.html">
+      <button class="btn btn-primary">← Back to Dashboard</button>
+    </a>
+    <button class="btn btn-secondary" onclick="logout()">Logout</button>
+  </div>
+
+  <style>
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+
+  <script src="js/auth.js"></script>
+  <script>
+    const token = getToken();
+
+    let payload = null;
+    try {
+  payload = JSON.parse(atob(token.split(".")[1]));
+} catch(e) {
+    logout();
+    }
+    if (user) {
+      document.getElementById("your-role").innerHTML =
+        `<span class="badge badge-${user.role}">${user.role}</span>`;
+    }
+  </script>
+</body>
+</html>

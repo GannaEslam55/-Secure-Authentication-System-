@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Area — SecureAuth</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body style="align-items:flex-start; justify-content:center; padding:0;">
+  <div class="orb-bottom"></div>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🔐</div>
+        <span class="brand-name">SecureAuth</span>
+      </div>
+      <span class="sidebar-label">Navigation</span>
+      <a class="nav-item" href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+      <a class="nav-item" href="profile.html"><span class="icon">👤</span> Profile</a>
+      <a class="nav-item active" href="user.html"><span class="icon">📁</span> User Area</a>
+      <div class="sidebar-bottom">
+        <div class="user-chip">
+          <div class="avatar" id="sidebar-avatar">?</div>
+          <div class="user-info">
+            <div class="name" id="sidebar-name">Loading...</div>
+            <div class="role-tag" id="sidebar-role">—</div>
+          </div>
+        </div>
+        <button class="nav-item" onclick="logout()" style="margin-top:8px; color:var(--error);">
+          <span class="icon">🚪</span> Logout
+        </button>
+      </div>
+    </aside>
+    <main class="main-content">
+      <div class="page-header">
+        <h1>User Area 📁</h1>
+        <p>Basic access — available to all authenticated users</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <div class="stat-icon">📁</div>
+          <div class="stat-label">Access Level</div>
+          <div class="stat-value" style="font-size:18px;">USER</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-icon">🔒</div>
+          <div class="stat-label">Route</div>
+          <div class="stat-value" style="font-size:14px;">/api/user/dashboard</div>
+        </div>
+        <div class="stat-card pink">
+          <div class="stat-icon">✅</div>
+          <div class="stat-label">Auth Required</div>
+          <div class="stat-value" style="font-size:16px;">JWT Token</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-header">📋 User Permissions</div>
+        <div class="info-row"><span class="key">Dashboard</span><span class="val" style="color:var(--accent3);">✅ Allowed</span></div>
+        <div class="info-row"><span class="key">Profile</span><span class="val" style="color:var(--accent3);">✅ Allowed</span></div>
+        <div class="info-row"><span class="key">Manager Panel</span><span class="val" style="color:var(--error);">❌ Manager+ Only</span></div>
+        <div class="info-row"><span class="key">Admin Panel</span><span class="val" style="color:var(--error);">❌ Admin Only</span></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-header">🖥️ API Response — /api/user/dashboard</div>
+        <div class="info-row"><span class="key">message</span><span class="val" id="api-message">Loading...</span></div>
+        <div class="info-row"><span class="key">userId</span><span class="val" id="api-userId">—</span></div>
+        <div class="info-row"><span class="key">name</span><span class="val" id="api-name">—</span></div>
+        <div class="info-row"><span class="key">role</span><span class="val" id="api-role">—</span></div>
+      </div>
+    </main>
+  </div>
+  <script src="js/auth.js"></script>
+  <script>
+    requireRole("user", "manager", "admin");
+    populateSidebar();
+    (async () => {
+      const res = await apiCall("/user/dashboard");
+      if (res.ok) {
+        document.getElementById("api-message").textContent = res.data.message;
+        document.getElementById("api-userId").textContent = res.data.user.userId;
+        document.getElementById("api-name").textContent = res.data.user.name;
+        document.getElementById("api-role").innerHTML = `<span class="badge badge-${res.data.user.role}">${res.data.user.role}</span>`;
+      }
+    })();
+  </script>
+</body>
+</html>
